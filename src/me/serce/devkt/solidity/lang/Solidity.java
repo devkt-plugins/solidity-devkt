@@ -8,9 +8,11 @@ import me.serce.devkt.solidity.lang.psi.SolNumberLiteral;
 import org.ice1000.devkt.openapi.AnnotationHolder;
 import org.ice1000.devkt.openapi.ColorScheme;
 import org.ice1000.devkt.openapi.ExtendedDevKtLanguage;
+import org.ice1000.devkt.openapi.PsiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
+import org.jetbrains.kotlin.com.intellij.psi.TokenType;
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType;
 
 public class Solidity<T> extends ExtendedDevKtLanguage<T> {
@@ -45,13 +47,27 @@ public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 	@Override
 	public void annotate(PsiElement element, AnnotationHolder<? super T> document, ColorScheme<? extends T> colorScheme) {
 		super.annotate(element, document, colorScheme);
-		if (element instanceof SolNumberLiteral) document.highlight(element, colorScheme.getNumbers());
-		else {
+		if (element instanceof SolNumberLiteral) {
+			document.highlight(element, colorScheme.getNumbers());
+			return;
+		}
+		function:
+		{
 			PsiElement prevSibling = element.getPrevSibling();
-			if (prevSibling == null) return;
-			if (prevSibling.getNode().getElementType() == SolidityTokenTypes.FUNCTION) {
+			if (prevSibling == null) break function;
+			if (PsiUtils.getNodeType(prevSibling) == TokenType.WHITE_SPACE) prevSibling = prevSibling.getPrevSibling();
+			if (prevSibling == null) break function;
+			if (PsiUtils.getNodeType(prevSibling) == SolidityTokenTypes.FUNCTION)
 				document.highlight(element, colorScheme.getFunction());
-			}
+		}
+		clazz:
+		{
+			PsiElement prevSibling = element.getPrevSibling();
+			if (prevSibling == null) break clazz;
+			if (PsiUtils.getNodeType(prevSibling) == TokenType.WHITE_SPACE) prevSibling = prevSibling.getPrevSibling();
+			if (prevSibling == null) break clazz;
+			if (PsiUtils.getNodeType(prevSibling) == SolidityTokenTypes.CONTRACT)
+				document.highlight(element, colorScheme.getNamespace());
 		}
 	}
 

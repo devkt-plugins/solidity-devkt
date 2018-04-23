@@ -15,7 +15,7 @@ public class SolElementType extends IElementType {
 	public static final @NotNull
 	TokenSet COMMENTS = TokenSet.create(LINECOMMENT, DOCCOMMENT);
 	public static final @NotNull
-	TokenSet NUMBERS = TokenSet.create(HEXNUMBER, DECIMALNUMBER, FIXEDNUMBER, SCIENTIFICNUMBER, NUMBERUNIT);
+	TokenSet NUMBERS = TokenSet.create(HEXNUMBER, DECIMALNUMBER, FIXEDNUMBER, SCIENTIFICNUMBER, NUMBERUNIT, HEXLITERAL);
 	public static final @NotNull
 	TokenSet KEYWORDS = TokenSet.create(IMPORT,
 			AS,

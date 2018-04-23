@@ -1,9 +1,7 @@
-# plugin-template
+# Solidity for DevKt
 
-This is the template of the plugin project.
+This is a [DevKt][0] plugin for the Solidity programming language, based on
+[this IDEA plugin][1].
 
-Things to change before coding:
-
-+ `your-language-devkt` in [settings.gradle.kts](settings.gradle.kts)
-+ `your.package.name` in [build.gradle.kts](build.gradle.kts)
-
+  [0]: https://github.com/ice1000/dev-kt
+  [1]: https://github.com/intellij-solidity/intellij-solidity
