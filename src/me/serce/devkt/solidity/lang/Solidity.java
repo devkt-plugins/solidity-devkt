@@ -28,8 +28,11 @@ public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 	@Override
 	public T attributesOf(IElementType type, ColorScheme<? extends T> colorScheme) {
 		if (type == SolidityTokenTypes.COMMA) return colorScheme.getComma();
+		if (type == SolidityTokenTypes.COLON) return colorScheme.getColon();
+		if (type == SolidityTokenTypes.SEMICOLON) return colorScheme.getSemicolon();
 		else if (type == SolidityTokenTypes.LINECOMMENT) return colorScheme.getLineComments();
 		else if (type == SolidityTokenTypes.DOCCOMMENT) return colorScheme.getDocComments();
+		else if (type == SolidityTokenTypes.STRINGLITERAL) return colorScheme.getString();
 		else if (SolElementType.NUMBERS.contains(type)) return colorScheme.getNumbers();
 		else if (SolElementType.OPERATORS.contains(type)) return colorScheme.getOperators();
 		else if (SolElementType.KEYWORDS.contains(type)) return colorScheme.getKeywords();
