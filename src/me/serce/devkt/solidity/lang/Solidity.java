@@ -4,10 +4,13 @@ import kotlin.Pair;
 import me.serce.devkt.solidity.lang.core.SolElementType;
 import me.serce.devkt.solidity.lang.core.SolidityParserDefinition;
 import me.serce.devkt.solidity.lang.core.SolidityTokenTypes;
+import me.serce.devkt.solidity.lang.psi.SolNumberLiteral;
+import org.ice1000.devkt.openapi.AnnotationHolder;
 import org.ice1000.devkt.openapi.ColorScheme;
 import org.ice1000.devkt.openapi.ExtendedDevKtLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType;
 
 public class Solidity<T> extends ExtendedDevKtLanguage<T> {
@@ -37,6 +40,19 @@ public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 		else if (SolElementType.OPERATORS.contains(type)) return colorScheme.getOperators();
 		else if (SolElementType.KEYWORDS.contains(type)) return colorScheme.getKeywords();
 		else return super.attributesOf(type, colorScheme);
+	}
+
+	@Override
+	public void annotate(PsiElement element, AnnotationHolder<? super T> document, ColorScheme<? extends T> colorScheme) {
+		super.annotate(element, document, colorScheme);
+		if (element instanceof SolNumberLiteral) document.highlight(element, colorScheme.getNumbers());
+		else {
+			PsiElement prevSibling = element.getPrevSibling();
+			if (prevSibling == null) return;
+			if (prevSibling.getNode().getElementType() == SolidityTokenTypes.FUNCTION) {
+				document.highlight(element, colorScheme.getFunction());
+			}
+		}
 	}
 
 	@Override
