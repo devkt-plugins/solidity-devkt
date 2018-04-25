@@ -5,6 +5,7 @@ import me.serce.devkt.solidity.lang.core.SolElementType;
 import me.serce.devkt.solidity.lang.core.SolidityParserDefinition;
 import me.serce.devkt.solidity.lang.core.SolidityTokenTypes;
 import me.serce.devkt.solidity.lang.psi.SolNumberLiteral;
+import me.serce.devkt.solidity.lang.psi.SolParameterDef;
 import org.ice1000.devkt.openapi.AnnotationHolder;
 import org.ice1000.devkt.openapi.ColorScheme;
 import org.ice1000.devkt.openapi.ExtendedDevKtLanguage;
@@ -25,13 +26,13 @@ public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 	}
 
 	@Override
-	public boolean satisfies(String fileName) {
+	public boolean satisfies(@NotNull String fileName) {
 		return fileName.endsWith(".sol");
 	}
 
 	@Nullable
 	@Override
-	public T attributesOf(IElementType type, ColorScheme<? extends T> colorScheme) {
+	public T attributesOf(@NotNull IElementType type, @NotNull ColorScheme<? extends T> colorScheme) {
 		if (type == SolidityTokenTypes.COMMA) return colorScheme.getComma();
 		if (type == SolidityTokenTypes.COLON) return colorScheme.getColon();
 		if (type == SolidityTokenTypes.SEMICOLON) return colorScheme.getSemicolon();
@@ -45,7 +46,12 @@ public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 	}
 
 	@Override
-	public void annotate(PsiElement element, AnnotationHolder<? super T> document, ColorScheme<? extends T> colorScheme) {
+	public boolean shouldAddAsCompletion(@NotNull PsiElement element) {
+		return element instanceof SolParameterDef;
+	}
+
+	@Override
+	public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder<? super T> document, @NotNull ColorScheme<? extends T> colorScheme) {
 		super.annotate(element, document, colorScheme);
 		if (element instanceof SolNumberLiteral) {
 			document.highlight(element, colorScheme.getNumbers());
