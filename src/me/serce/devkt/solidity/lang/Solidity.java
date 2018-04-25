@@ -1,6 +1,7 @@
 package me.serce.devkt.solidity.lang;
 
 import kotlin.Pair;
+import kotlin.collections.CollectionsKt;
 import me.serce.devkt.solidity.lang.core.SolElementType;
 import me.serce.devkt.solidity.lang.core.SolidityParserDefinition;
 import me.serce.devkt.solidity.lang.core.SolidityTokenTypes;
@@ -10,16 +11,82 @@ import org.ice1000.devkt.openapi.AnnotationHolder;
 import org.ice1000.devkt.openapi.ColorScheme;
 import org.ice1000.devkt.openapi.ExtendedDevKtLanguage;
 import org.ice1000.devkt.openapi.PsiUtils;
+import org.ice1000.devkt.openapi.util.CompletionElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.com.intellij.psi.TokenType;
 import org.jetbrains.kotlin.com.intellij.psi.tree.IElementType;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 
-	private static final @NotNull
-	Pair<String, String> stringPair = new Pair<>("/*", "*/");
+	private static final @NotNull Pair<String, String> stringPair = new Pair<>("/*", "*/");
+
+	private static final @NotNull Set<CompletionElement> predefinedCompletions = CollectionsKt.mapTo(Arrays.asList(
+			"import",
+			"as",
+			"pragma",
+			"new",
+			"delete",
+			"emit",
+			"constructor",
+			"contract",
+			"library",
+			"interface",
+			"is",
+			"struct",
+			"function",
+			"enum",
+			"public",
+			"private",
+			"internal",
+			"external",
+			"constant",
+			"payable",
+			"pure",
+			"view",
+			"if",
+			"else",
+			"for",
+			"while",
+			"do",
+			"break",
+			"continue",
+			"throw",
+			"using",
+			"return",
+			"returns",
+			"mapping",
+			"event",
+			"anonymous",
+			"modifier",
+			"assembly",
+			"bytenumtype",
+			"bytesnumtype",
+			"fixednumtype",
+			"intnumtype",
+			"ufixednumtype",
+			"uintnumtype",
+			"string",
+			"bool",
+			"address",
+			"var",
+			"storage",
+			"memory",
+			"wei",
+			"ether",
+			"szabo",
+			"finney",
+			"seconds",
+			"minutes",
+			"hours",
+			"days",
+			"weeks",
+			"years"), new HashSet<>(), CompletionElement::new);
 
 	public Solidity() {
 		super(SolidityLanguage.INSTANCE, new SolidityParserDefinition());
@@ -43,6 +110,11 @@ public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 		else if (SolElementType.OPERATORS.contains(type)) return colorScheme.getOperators();
 		else if (SolElementType.KEYWORDS.contains(type)) return colorScheme.getKeywords();
 		else return super.attributesOf(type, colorScheme);
+	}
+
+	@Override
+	public @NotNull Set<CompletionElement> getInitialCompletionElementList() {
+		return predefinedCompletions;
 	}
 
 	@Override
@@ -78,14 +150,12 @@ public class Solidity<T> extends ExtendedDevKtLanguage<T> {
 	}
 
 	@Override
-	public @NotNull
-	Pair<String, String> getBlockComment() {
+	public @NotNull Pair<String, String> getBlockComment() {
 		return stringPair;
 	}
 
 	@Override
-	public @NotNull
-	String getLineCommentStart() {
+	public @NotNull String getLineCommentStart() {
 		return "//";
 	}
 }
