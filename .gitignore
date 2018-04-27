@@ -17,5 +17,5 @@ build
 .build-cache
 config.properties
 .idea
-!lib/*.jar
 !gradle/wrapper/gradle-wrapper.jar
+solidity-devkt.iml
